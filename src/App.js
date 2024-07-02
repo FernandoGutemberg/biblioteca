@@ -43,7 +43,7 @@ function App() {
               <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto flex-column">
                   {/* Links da barra lateral */}
-                  {sessionStorage.getItem("session") === "true" && (
+                  {sessionStorage.getItem("token") && (
                     <>
                       <Navbar.Brand href="/">Biblioteca</Navbar.Brand>
                       <Link to="/Home" className="nav-link">Home</Link>

@@ -7,14 +7,15 @@ import InputMask from "react-input-mask";
 import './Cadastro.css';
 
 const Cadastrousuarios = () => {
-    useEffect(() => {
+    
+  useEffect(() => {
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+      window.location.replace("/"); 
+    }
+  }, []);
 
-        if (sessionStorage.getItem("session") !== "true") {
-
-            window.location.replace("/");
-        }
-
-    }, []);
+    
 
     const navigate = useNavigate();
 

@@ -6,13 +6,11 @@ import "react-toastify/dist/ReactToastify.css";
 
 const Cadastrolivro = () => {
     useEffect(() => {
-
-        if (sessionStorage.getItem("session") !== "true") {
-
-            window.location.replace("/");
+        const token = sessionStorage.getItem('token');
+        if (!token) {
+          window.location.replace("/"); 
         }
-
-    }, []);
+      }, []);
     
     const navigate = useNavigate();
 

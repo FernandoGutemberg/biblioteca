@@ -8,12 +8,10 @@ import "react-toastify/dist/ReactToastify.css";
 
 const Tabelaautor = () => {
   useEffect(() => {
-
-    if (sessionStorage.getItem("session") !== "true") {
-
-      window.location.replace("/");
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+      window.location.replace("/"); 
     }
-
   }, []);
 
   const notifyDelete = () => toast("Autor deletado com sucesso!");

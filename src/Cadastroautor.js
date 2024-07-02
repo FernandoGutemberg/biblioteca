@@ -8,14 +8,12 @@ const Cadastroautor = () => {
 
     //verificacao de secao, verifica se há uma sessão válida, se não houver, redireciona o usuário para a página inicial 
     // SE a secao for diferente de verdadeira, direcione para (/) e assim não deixa acessar o conteúdo
-    useEffect(() => { //
-
-        if (sessionStorage.getItem("session") !== "true") {
-
-            window.location.replace("/");
+    useEffect(() => {
+        const token = sessionStorage.getItem('token');
+        if (!token) {
+          window.location.replace("/"); 
         }
-
-    }, []);
+      }, []);
 
     //funcao de navegacao do React
     const navigate = useNavigate();

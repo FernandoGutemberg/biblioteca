@@ -14,8 +14,10 @@ const Login = () => {
       .then(response => response.json())
       .then(data => {
         if (data.sucesso) {
+          sessionStorage.setItem('token', data.token);
           navigate('/Home'); 
         } else {
+          alert('Login falhou: ' + data.mensagem);
         }
       })
       .catch(error => {

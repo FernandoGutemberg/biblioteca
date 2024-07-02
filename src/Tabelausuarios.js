@@ -11,14 +11,12 @@ import "react-toastify/dist/ReactToastify.css";
 const Tabelausuarios = () => {
 
 
-  //adicionar a logica aqui, tem que adicionar em cada pagina
+  // Verifica a sessão ao carregar a página
   useEffect(() => {
-
-    if (sessionStorage.getItem("session") !== "true") {
-
-      window.location.replace("/");
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+      window.location.replace("/"); // Redireciona para a tela de login se não houver token
     }
-
   }, []);
 
 

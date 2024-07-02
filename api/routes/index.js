@@ -3,6 +3,9 @@ var router = express.Router();
 
 const mongoose = require('mongoose');
 
+//armazene o token em um objeto no express
+const tokens = {};
+
 
 //Mensagem para eu verificar o Back-End
 console.log("Rodando o Back-End!?");
@@ -611,7 +614,12 @@ router.get('/login', async (req, res) => {
 
     // Se o usuário for encontrado, gera um token e retorna sucesso
     const stringAleatoria = gerarStringAleatoria(6);
-    console.log(stringAleatoria);
+    tokens[email] = stringAleatoria; //Deve salvar login como chave do array e token como valor
+
+    console.log(tokens);
+
+
+
     return res.status(200).json({ sucesso: true, mensagem: 'Login bem-sucedido', token: stringAleatoria });
 
   } catch (error) {
@@ -619,7 +627,18 @@ router.get('/login', async (req, res) => {
     res.status(500).json({ erro: 'Ocorreu um erro ao tentar fazer login. Por favor, tente novamente.' });
   }
 });
-// ate aqui, gravar vídeo explicando linha a linha
+
+router.post('/verificarToken', (req, res) => {
+  const { token } = req.body;
+
+  // Verifica se o token está presente no objeto tokens
+  if (Object.values(tokens).includes(token)) {
+    res.json({ validado: true });
+  } else {
+    res.json({ validado: false });
+  }
+});
+
 
 
 
