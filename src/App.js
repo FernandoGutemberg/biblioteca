@@ -45,7 +45,7 @@ function App() {
                   {/* Links da barra lateral */}
                   {sessionStorage.getItem("token") && (
                     <>
-                      <Navbar.Brand href="/">Biblioteca</Navbar.Brand>
+                      <Navbar.Brand href="/Home">Biblioteca</Navbar.Brand>
                       <Link to="/Home" className="nav-link">Home</Link>
                       <Link to="/Tabelausuarios" className="nav-link">Usuários</Link>
                       <Link to="/Tabelalivro" className="nav-link">Livros</Link>

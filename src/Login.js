@@ -17,7 +17,7 @@ const Login = () => {
           sessionStorage.setItem('token', data.token);
           navigate('/Home'); 
         } else {
-          alert('Login falhou: ' + data.mensagem);
+          alert('Usuário ou senha incorreto!');
         }
       })
       .catch(error => {
