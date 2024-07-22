@@ -4,7 +4,7 @@ var router = express.Router();
 const mongoose = require('mongoose');
 
 //armazene o token em um objeto no express
-const tokens = {};
+// const tokens = {};
 
 
 //Mensagem para eu verificar o Back-End
@@ -85,12 +85,12 @@ router.post('/cadastrousuarios', async (req, res) => {
       // send mail with defined transport object
       const info = await transporter.sendMail({
         from: 'noreply@cfn.org.br', // sender address
-        to:  options.email, // list of receivers
+        to: options.email, // list of receivers
         subject: "Mensageiro do sistema de biblioteca", // Subject line
         html: body, // html body
       });
 
-      console.log("Message sent: %s", "Mensagem Enviada",  info.messageId);
+      console.log("Message sent: %s", "Mensagem Enviada", info.messageId);
       // Message sent: <d786aa62-4e0a-070a-47ed-0b0666549519@ethereal.email>
     }
 
@@ -584,60 +584,91 @@ router.delete('/tabelacategoria/:id', async (req, res) => {
   }
 });
 
-//Pega os dados para atualizar
-//daqui
+// Array para armazenar tokens gerados
+const tokens = [];
+
+// Rota para login
 router.get('/login', async (req, res) => {
   const { email, senha } = req.query;
 
+  // Loga os dados recebidos para fins de depuração
   console.log('Dados recebidos:', email, senha);
+
   try {
-    const User = mongoose.model('User', userSchema); 
+    // Define o modelo de usuário do MongoDB
+    const User = mongoose.model('User', userSchema);
+
+    // Procura um usuário no banco de dados com o email e senha fornecidos
     const usuario = await User.findOne({ email, senha });
 
+    // Se o usuário não for encontrado, retorna um erro 403 (Proibido)
     if (!usuario) {
-      return res.status(404).json({ erro: 'Email ou senha incorretos' });
+      console.log('Usuário não encontrado ou senha incorreta.');
+      return res.status(403).json({ erro: 'Email ou senha incorretos' });
     }
 
-    // Função para gerar string aleatória
+    // Função para gerar uma string aleatória de um tamanho especificado
     function gerarStringAleatoria(tamanho) {
-      var caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      var resultado = '';
-      var comprimentoCaracteres = caracteres.length;
-  
-      for (var i = 0; i < tamanho; i++) {
-          var indiceAleatorio = Math.floor(Math.random() * comprimentoCaracteres);
-          resultado += caracteres.charAt(indiceAleatorio);
+      const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; // Define os caracteres que podem ser usados no token
+      let resultado = ''; // String resultante que será retornada
+      const comprimentoCaracteres = caracteres.length; // Comprimento da string de caracteres
+
+      // Loop para gerar a string aleatória
+      for (let i = 0; i < tamanho; i++) {
+        // Gera um índice aleatório e adiciona o caractere correspondente à string resultante
+        const indiceAleatorio = Math.floor(Math.random() * comprimentoCaracteres);
+        resultado += caracteres.charAt(indiceAleatorio);
       }
-  
-      return resultado;
+
+      return resultado; // Retorna a string aleatória gerada
     }
 
-    // Se o usuário for encontrado, gera um token e retorna sucesso
-    const stringAleatoria = gerarStringAleatoria(6);
-    tokens[email] = stringAleatoria; //Deve salvar login como chave do array e token como valor
+    // Função para gerar um token único
+    function gerarTokenUnico() {
+      // Gera uma string aleatória inicial
+      let token = gerarStringAleatoria(6);
+      // Verifica se o token já existe na lista de tokens
+      while (tokens.includes(token)) {
+        // Se o token já existir, gera um novo token
+        token = gerarStringAleatoria(6);
+      }
+      return token; // Retorna o token único gerado
+    }
 
-    console.log(tokens);
+    // Se o usuário for encontrado, gera um token único
+    const token = gerarTokenUnico();
+    tokens.push(token); // Armazena o token gerado na lista
 
+    // Loga a lista de tokens para fins de depuração
+    console.log('Tokens gerados:', tokens);
 
-
-    return res.status(200).json({ sucesso: true, mensagem: 'Login bem-sucedido', token: stringAleatoria });
-
+    // Retorna um status de sucesso com o token gerado
+    return res.status(200).json({ sucesso: true, mensagem: 'Login bem-sucedido', token });
   } catch (error) {
-    // Se houver um erro, responde com um status de erro e mensagem
+    // Loga o erro para fins de depuração
+    console.error('Erro ao tentar fazer login:', error);
+    // Em caso de erro, retorna um status 500 (Erro Interno do Servidor) com uma mensagem de erro
     res.status(500).json({ erro: 'Ocorreu um erro ao tentar fazer login. Por favor, tente novamente.' });
   }
 });
 
+// Rota para verificar se um token é válido
 router.post('/verificarToken', (req, res) => {
+  console.log('Rota /verificarToken foi acessada.');
   const { token } = req.body;
 
-  // Verifica se o token está presente no objeto tokens
-  if (Object.values(tokens).includes(token)) {
+  // Verifica se o token está presente na lista de tokens
+  if (tokens.includes(token)) {
+    // Se o token estiver presente, retorna um JSON com validado: true
     res.json({ validado: true });
+    console.log("Mensagem retornando", true);
   } else {
+    // Se o token não estiver presente, retorna um JSON com validado: false
     res.json({ validado: false });
+    console.log("Mensagem retornando", false);
   }
 });
+
 
 
 

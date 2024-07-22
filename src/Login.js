@@ -7,9 +7,11 @@ const Login = () => {
   const [senha, setSenha] = useState('');
   const navigate = useNavigate();
 
+  //funcao que lida com o envio do formulario
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    //fetch faz um requisicao para o servidor de login com os parametros email e senha
     fetch(`http://localhost:9000/login?email=${email}&senha=${senha}`)
       .then(response => response.json())
       .then(data => {

@@ -5,17 +5,42 @@ import Table from 'react-bootstrap/Table';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from 'react-router-dom';
 
 // Define o componente funcional Tabelausuarios
 const Tabelalivro = () => {
+    const navigate = useNavigate();
+    const [tokenValido, setTokenValido] = useState(false);
 
     useEffect(() => {
         const token = sessionStorage.getItem('token');
-        if (!token) {
-          window.location.replace("/"); 
-        }
-      }, []);
+        if (token) {
+            fetch('http://localhost:9000/verificarToken', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ token }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.validado) {
+                        setTokenValido(true);
+                    } else {
+                        setTokenValido(false);
+                        alert('Token invákido. Redirecionando para a tela de login.');
+                        navigate('/Login');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                });
 
+        } else {
+            alert('Token não encontrado. Redirecionando para a tela de login.');
+            navigate('/Login');
+        }
+    }, [navigate]);
 
 
     const notifyDelete = () => toast("Livro deletado com sucesso!");

@@ -5,18 +5,38 @@ import "react-toastify/dist/ReactToastify.css";
 import { Col, Form, Row, Button } from 'react-bootstrap';
 
 const Cadastroautor = () => {
+    const navigate = useNavigate();
+    const [tokenValido, setTokenValido] = useState(false);
 
-    //verificacao de secao, verifica se há uma sessão válida, se não houver, redireciona o usuário para a página inicial 
-    // SE a secao for diferente de verdadeira, direcione para (/) e assim não deixa acessar o conteúdo
     useEffect(() => {
         const token = sessionStorage.getItem('token');
-        if (!token) {
-          window.location.replace("/"); 
-        }
-      }, []);
+        if (token) {
+            fetch('http://localhost:9000/verificarToken', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ token }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.validado) {
+                        setTokenValido(true);
+                    } else {
+                        setTokenValido(false);
+                        alert('Token inválido. Redirecionando para a tela de login.');
+                        navigate('/Login');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                });
 
-    //funcao de navegacao do React
-    const navigate = useNavigate();
+        } else {
+            alert('Token não encontrado. Redirecionando para a tela de login.');
+            navigate('/Login');
+        }
+    }, [navigate]);
 
     //estados que armazenam os valores dos campos do formulário
     const [nome, setNome] = useState("");

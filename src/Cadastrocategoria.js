@@ -5,14 +5,39 @@ import "react-toastify/dist/ReactToastify.css";
 import { Col, Form, Row, Button } from 'react-bootstrap';
 
 const Cadastrocategoria = () => {
+    const navigate = useNavigate();
+    const [tokenValido, setTokenValido] = useState(false);
+
     useEffect(() => {
         const token = sessionStorage.getItem('token');
-        if (!token) {
-          window.location.replace("/"); 
-        }
-      }, []);
+        if (token) {
+            fetch('http://localhost:9000/verificarToken', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ token }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.validado) {
+                        setTokenValido(true);
+                    } else {
+                        setTokenValido(false);
+                        alert('Token inválido. Redirecionando para a tela de login.');
+                        navigate('/Login');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                });
 
-    const navigate = useNavigate();
+        } else {
+            alert('Token não encontrado. Redirecionando para a tela de login.');
+            navigate('/Login');
+        }
+    }, [navigate]);
+
 
     const [nome, setNome] = useState("");
     const [descricao, setDescricao] = useState("");

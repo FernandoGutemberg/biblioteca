@@ -1,27 +1,46 @@
 // Importa as funções useState e useEffect do React
-//useEffect e para fazer algo apenas após renderização
 import React, { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { useNavigate } from 'react-router-dom'; // Assumindo que você está usando react-router-dom para navegação
 
 // Define o componente funcional Tabelausuarios
 const Tabelausuarios = () => {
+  const navigate = useNavigate();
+  const [tokenValido, setTokenValido] = useState(false);
 
-
-  // Verifica a sessão ao carregar a página
+  // Verifica a sessão ao carregar a página e valida o token
   useEffect(() => {
     const token = sessionStorage.getItem('token');
-    if (!token) {
-      window.location.replace("/"); // Redireciona para a tela de login se não houver token
+    if (token) {
+      // Faz a requisição para verificar o token
+      fetch('http://localhost:9000/verificarToken', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.validado) {
+            setTokenValido(true);
+          } else {
+            setTokenValido(false);
+            alert('Token inválido. Redirecionando para a tela de login.');
+            navigate('/Login'); // Redireciona para a tela de login se o token for inválido
+          }
+        })
+        .catch(error => {
+          console.error('Erro:', error);
+        });
+    } else {
+      alert('Token não encontrado. Redirecionando para a tela de login.');
+      navigate('/Login'); // Redireciona para a tela de login se o token não for encontrado
     }
-  }, []);
-
-
-
-
+  }, [navigate]);
 
   const notifyDelete = () => toast("Usuário deletado com sucesso!");
   const notifyCadastro = () => toast("Usuário salvo com sucesso!");

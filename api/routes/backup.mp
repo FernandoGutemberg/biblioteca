@@ -144,3 +144,57 @@
 // Evite armazenar senhas no código: É crucial nunca armazenar senhas diretamente no seu código. Considere usar variáveis de ambiente ou um sistema de gerenciamento de configuração seguro para armazenar informações confidenciais.
 // Use conexões seguras (TLS/SSL): Sempre configure o Nodemailer para usar uma conexão segura (TLS/SSL) ao enviar emails. Isso criptografa a comunicação entre seu aplicativo e o servidor de email, protegendo dados confidenciais.
 // Limpe a entrada do usuário: Antes de usar options.email e options.senha_clear no corpo do email, certifique-se de higienizá-
+
+1- Na api, após gerar o token de login, o express deve guardar esse token em uma lista. 
+Seja um object ou um array. ok
+2 - antes de salvar o token nesse array, vc deve verificar se o token está duplicado 
+3 - se o token for duplicado, gera outro e cai na ação 2
+4 - se o token não for duplicado, insere o token na lista (ação 1)
+5 - se tudo estiver ok devolve o token para o reac
+6 na rota /verificarToken, envia o token para o express e checa 
+se o token existe na lista de tokens
+7 - se o token existir, retorna true, se não, false
+
+// Importa as funções useState e useEffect do React
+import React, { useState, useEffect } from 'react';
+import Table from 'react-bootstrap/Table';
+import { Modal, Button, Form } from 'react-bootstrap';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from 'react-router-dom'; // Assumindo que você está usando react-router-dom para navegação
+
+// Define o componente funcional Tabelausuarios
+const Tabelausuarios = () => {
+  const navigate = useNavigate();
+  const [tokenValido, setTokenValido] = useState(false);
+
+  // Verifica a sessão ao carregar a página e valida o token
+  useEffect(() => {
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      // Faz a requisição para verificar o token
+      fetch('http://localhost:9000/verificarToken', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.validado) {
+            setTokenValido(true);
+          } else {
+            setTokenValido(false);
+            alert('Token inválido. Redirecionando para a tela de login.');
+            navigate('/Login'); // Redireciona para a tela de login se o token for inválido
+          }
+        })
+        .catch(error => {
+          console.error('Erro:', error);
+        });
+    } else {
+      alert('Token não encontrado. Redirecionando para a tela de login.');
+      navigate('/Login'); // Redireciona para a tela de login se o token não for encontrado
+    }
+  }, [navigate]);
