@@ -1,3 +1,4 @@
+import { Button } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -31,12 +32,37 @@ const Home = () => {
         });
     } else {
       alert('Token não encontrado. Redirecionando para a tela de login.');
-      navigate('/Login'); // Redireciona para a tela de login se o token não for encontrado
+      navigate('/'); // Redireciona para a tela de login se o token não for encontrado
     }
   }, [navigate]);
 
+
+  const handleLogout = () => {
+    // Remove o token do armazenamento
+    sessionStorage.removeItem('token');
+
+    // Envia uma requisição para o servidor para invalidar o token (opcional)
+    fetch('http://localhost:9000/logoutToken', {
+      method: 'GET',
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Erro ao realizar o logout');
+        }
+      })
+      .catch(error => {
+        console.error('Erro:', error);
+      });
+
+    // Redireciona para a tela de login
+    navigate('/');
+  };
+
+
+
   return (
     <div className="container">
+      <Button onClick={handleLogout}>Logout</Button>
       <h1>Home</h1>
       <section className="home">
         <p>

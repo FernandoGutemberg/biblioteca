@@ -626,12 +626,16 @@ router.get('/login', async (req, res) => {
     // Função para gerar um token único
     function gerarTokenUnico() {
       // Gera uma string aleatória inicial
+      //(Ação 1)
       let token = gerarStringAleatoria(6);
       // Verifica se o token já existe na lista de tokens
+      // Ação 2: Verifica se o token já existe na lista de tokens
       while (tokens.includes(token)) {
-        // Se o token já existir, gera um novo token
+        // Se o token já existir, gera um novo token (Ação 2)
         token = gerarStringAleatoria(6);
       }
+      // Ação 1: Retorna o token único gerado (implicando que ele será inserido na lista depois)
+
       return token; // Retorna o token único gerado
     }
 
@@ -639,7 +643,7 @@ router.get('/login', async (req, res) => {
     const token = gerarTokenUnico();
     tokens.push(token); // Armazena o token gerado na lista
 
-    // Loga a lista de tokens para fins de depuração
+    // Mostrar lista de tokens
     console.log('Tokens gerados:', tokens);
 
     // Retorna um status de sucesso com o token gerado
@@ -669,6 +673,23 @@ router.post('/verificarToken', (req, res) => {
   }
 });
 
+
+// Rota para logout e remoção do token
+router.get('/logoutToken', (req, res) => {
+  console.log('Rota /logoutToken foi acessada.');
+  const token = req.query.token; // Obtém o token dos parâmetros da query string
+
+  // Verifica se o token está presente na lista de tokens
+  if (tokens.includes(token)) {
+    // Remove o token da lista de tokens
+    tokens = tokens.filter(t => t !== token);
+    res.json({ mensagem: 'Logout realizado com sucesso.' });
+    console.log("Token removido:", token);
+  } else {
+    res.json({ mensagem: 'Token não encontrado.' });
+    console.log("Token não encontrado:", token);
+  }
+});
 
 
 

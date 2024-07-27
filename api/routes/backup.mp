@@ -198,3 +198,16 @@ const Tabelausuarios = () => {
       navigate('/Login'); // Redireciona para a tela de login se o token não for encontrado
     }
   }, [navigate]);
+
+23/07/2024
+
+COrreto do verificarToken é um GET
+
+  Fazer o logout, criar um botao para sair do sistema, ele mata o token, vai na lista do express e elimina o token. 
+1 - Fazer o logout
+2 - igual o verificarToken, só que ele elimina o token na lista. 
+3 - Gravar video dele funcionando. 
+
+
+Pensar em outro projeto; Que trabalhe com algo do tipo WAPP. 
+Pensar outra ideia, mapa, upload, mensagens, notificações, geolocalização. 
