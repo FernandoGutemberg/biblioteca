@@ -25,7 +25,7 @@ const Cadastrolivro = () => {
                     } else {
                         setTokenValido(false);
                         alert('Token inválido. Redirecionando para a tela de login.');
-                        navigate('/Login');
+                        navigate('/');
                     }
                 })
                 .catch(error => {
@@ -34,7 +34,7 @@ const Cadastrolivro = () => {
 
         } else {
             alert('Token não encontrado. Redirecionando para a tela de login.');
-            navigate('/Login');
+            navigate('/');
         }
     }, [navigate]);
 

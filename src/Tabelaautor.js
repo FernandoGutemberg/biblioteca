@@ -28,7 +28,7 @@ const Tabelaautor = () => {
           } else {
             setTokenValido(false);
             alert('Token invákido. Redirecionando para a tela de login.');
-            navigate('/Login');
+            navigate('/');
           }
         })
         .catch(error => {
@@ -37,7 +37,7 @@ const Tabelaautor = () => {
 
     } else {
       alert('Token não encontrado. Redirecionando para a tela de login.');
-      navigate('/Login');
+      navigate('/');
     }
   }, [navigate]);
 

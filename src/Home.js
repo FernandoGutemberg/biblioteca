@@ -38,25 +38,30 @@ const Home = () => {
 
 
   const handleLogout = () => {
+    const token = sessionStorage.getItem('token');
+
     // Remove o token do armazenamento
     sessionStorage.removeItem('token');
 
     // Envia uma requisição para o servidor para invalidar o token (opcional)
-    fetch('http://localhost:9000/logoutToken', {
+    fetch(`http://localhost:9000/logoutToken?token=${token}`, {
       method: 'GET',
     })
       .then(response => {
         if (!response.ok) {
           throw new Error('Erro ao realizar o logout');
         }
+        // Se a requisição for bem-sucedida, não é necessário fazer mais nada
       })
       .catch(error => {
         console.error('Erro:', error);
+        // Trate o erro conforme necessário
       });
 
     // Redireciona para a tela de login
     navigate('/');
   };
+
 
 
 

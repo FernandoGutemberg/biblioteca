@@ -27,7 +27,7 @@ const Cadastrousuarios = () => {
                     } else {
                         setTokenValido(false);
                         alert('Token inválido. Redirecionando para a tela de login.');
-                        navigate('/Login');
+                        navigate('/');
                     }
                 })
                 .catch(error => {
@@ -36,7 +36,7 @@ const Cadastrousuarios = () => {
 
         } else {
             alert('Token não encontrado. Redirecionando para a tela de login.');
-            navigate('/Login');
+            navigate('/');
         }
     }, [navigate]);
 

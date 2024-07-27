@@ -585,7 +585,8 @@ router.delete('/tabelacategoria/:id', async (req, res) => {
 });
 
 // Array para armazenar tokens gerados
-const tokens = [];
+let tokens = [];
+
 
 // Rota para login
 router.get('/login', async (req, res) => {
@@ -678,6 +679,10 @@ router.post('/verificarToken', (req, res) => {
 router.get('/logoutToken', (req, res) => {
   console.log('Rota /logoutToken foi acessada.');
   const token = req.query.token; // Obtém o token dos parâmetros da query string
+  console.log('Token recebido:', token);
+
+  // Verifica o estado da lista de tokens antes da verificação
+  console.log('Lista de tokens antes da verificação:', tokens);
 
   // Verifica se o token está presente na lista de tokens
   if (tokens.includes(token)) {
@@ -686,10 +691,14 @@ router.get('/logoutToken', (req, res) => {
     res.json({ mensagem: 'Logout realizado com sucesso.' });
     console.log("Token removido:", token);
   } else {
-    res.json({ mensagem: 'Token não encontrado.' });
+    res.status(404).json({ mensagem: 'Token não encontrado.' });
     console.log("Token não encontrado:", token);
   }
+
+  // Verifica o estado da lista de tokens após a remoção
+  console.log('Lista de tokens após a remoção:', tokens);
 });
+
 
 
 

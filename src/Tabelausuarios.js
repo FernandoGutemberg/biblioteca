@@ -30,7 +30,7 @@ const Tabelausuarios = () => {
           } else {
             setTokenValido(false);
             alert('Token inválido. Redirecionando para a tela de login.');
-            navigate('/Login'); // Redireciona para a tela de login se o token for inválido
+            navigate('/'); // Redireciona para a tela de login se o token for inválido
           }
         })
         .catch(error => {
@@ -38,7 +38,7 @@ const Tabelausuarios = () => {
         });
     } else {
       alert('Token não encontrado. Redirecionando para a tela de login.');
-      navigate('/Login'); // Redireciona para a tela de login se o token não for encontrado
+      navigate('/'); // Redireciona para a tela de login se o token não for encontrado
     }
   }, [navigate]);
 
