@@ -165,7 +165,7 @@ const Cadastrousuarios = () => {
                         CPF:
                     </Form.Label>
                     <Col sm="10">
-                        <InputMask className="estilizacaoInputText" placeholder="000.000.000-00" mask="999.999.999-99" onChange={handleChangeCpf} />
+                        <InputMask className="estilizacaoInputText" placeholder="000.000.000-00" value={cpf}  mask="999.999.999-99" onChange={handleChangeCpf} />
                     </Col>
                 </Form.Group>
 
@@ -183,7 +183,7 @@ const Cadastrousuarios = () => {
                         Telefone:
                     </Form.Label>
                     <Col sm="10">
-                        <InputMask className="estilizacaoInputText" placeholder="" mask="99999-9999" onChange={handleChangeTelefone} />
+                        <InputMask className="estilizacaoInputText" placeholder="" mask="99999-9999" value={telefone} onChange={handleChangeTelefone} />
                     </Col>
                 </Form.Group>
 
